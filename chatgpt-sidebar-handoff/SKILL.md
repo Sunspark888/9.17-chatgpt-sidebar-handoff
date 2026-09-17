@@ -1,0 +1,99 @@
+---
+name: chatgpt-sidebar-handoff
+description: Reliably hand messages or local files to a specified ChatGPT conversation in the Codex sidebar, recover from browser-control timeouts without duplicate actions, and verify the actual delivery state. Use when the user asks to send, upload, hand off, or submit material to an existing ChatGPT/GPT Planner thread.
+---
+
+# ChatGPT Sidebar Handoff
+
+Use this skill for cross-conversation delivery through the Codex in-app browser. Treat browser-control errors, webpage state, and delivery state as three separate things.
+
+## Delivery lock
+
+Before acting, fix four facts:
+
+- exact destination conversation title and, when available, thread ID or URL;
+- exact local file(s) and/or message to send;
+- acceptance evidence required: attached, sent, or explicitly readable by GPT;
+- stop condition.
+
+For text-only coordination, prefer the thread messaging tool when it can reach the exact conversation. Use the in-app browser when files must be uploaded or visible page confirmation is required.
+
+The app's `send_message_to_thread` was verified with an existing `kind: chatgpt` conversation whose ID matched the website URL. This continues that conversation, rather than creating a Codex task. Verify the exact test/message and reply with `read_thread`; a successful tool return alone is not delivery evidence. Reads and already-open browser tabs may lag. Do not resend just because an early read is stale. The exposed message tool has no attachment parameter. Keep measured submission time, server reply time, and delayed observation time separate; message transport does not establish the model or reasoning mode used by the recipient.
+
+## Connect to the existing conversation
+
+1. On a fresh or reset CUA session, make exactly one initialization call allowed by the current tool instructions, such as `cua.getState()`. Then list the known in-app browser's tabs. Follow the current runtime documentation when its entry points differ from examples here.
+2. Match the intended tab by exact title plus URL or thread ID. Reuse that tab. Do not silently substitute another conversation.
+3. Acquire fresh browser and tab handles, then inspect a DOM snapshot. Confirm the target conversation and composer are visible.
+   If content is missing and inventory lists other existing tabs with the exact target conversation URL, inspect those read-only before concluding there is no reply or refreshing. A single tab and native history may both lag. Stop when the required delivery evidence is found; do not create duplicate tabs or resend to synchronize views.
+4. Do not reload a correct live page merely because the control call timed out. Reloading can discard a pending attachment or draft.
+5. If the exact conversation is confirmed stale (for example, native history contains a newer turn missing from the page), reload the original tab only after confirming no pending draft or attachment remains, then inspect fresh state before uploading. Preserve user drafts; only remove an agent-created unsent attachment when authorized and safe to recreate. Staleness alone does not establish a conversation branch or its cause.
+
+## Upload and send
+
+1. Check locally that the exact file exists and is the intended deliverable. Do not add hashes unless byte-identity verification is actually needed.
+2. Read the browser runtime's `file-uploads` documentation before the first upload in a session.
+3. Locate the upload controls from fresh UI state; labels may be `添加文件等`, `添加照片和文件`, or `从电脑上传`. Start `waitForEvent("filechooser")` before clicking the currently observed file-picker action, then call `setFiles` with the absolute path. Do not retry a historical label absent from the current UI.
+4. Inspect fresh DOM and require the exact filename to appear in the composer before sending.
+5. Fill the accompanying message. For an attachment, prefer clicking the exact `发送提示词` button; Enter may leave the draft unsent while upload processing finishes.
+6. Inspect fresh DOM and require a sent-message group containing both the filename and message. If the task requires review, wait for GPT's explicit acknowledgement that the file is readable.
+
+Keep side-effecting operations serial: attach, verify, send, verify. Batch only independent read-only checks.
+
+## Timeout recovery
+
+A timeout, `nodeRepl.fetch request failed`, or JavaScript-kernel reset means the control outcome is unknown. It does not prove that the ChatGPT page, login, upload, or send failed.
+
+After any such error:
+
+1. Do not immediately repeat the side effect.
+2. Reinitialize with one lightweight call and list the existing in-app tabs.
+3. Reacquire the exact browser/tab handle; never reuse stale bindings after a reset.
+4. Inspect current DOM before choosing the next action.
+5. Retry only the missing state transition:
+   - filename absent from composer: repeat attachment;
+   - filename present but draft still in composer: click Send once;
+   - sent message already visible: do not resend;
+   - GPT is generating: wait, then inspect again;
+   - GPT reply visible: record it and stop.
+
+Avoid combining a long fixed wait with a DOM snapshot in one short tool call. Use a short action call followed by a separate observation. If global inventory fails or returns no usable inventory and the target browser is already known, use one browser-scoped read-only inventory call when current runtime documentation supports it, such as `cua.listTabs({browser: 'iab'})`. Global inventory failure alone does not establish that this scoped route is unavailable. If no scoped route is available, perform at most one reset and one lightweight inventory retry. If the bounded recovery still returns no usable inventory, classify browser control as unavailable for the current turn. Do not reload the website, log in again, or repeat any delivery action. Use a purpose-built thread tool for text-only coordination when available; otherwise continue safe offline work and leave web-only upload or page interaction pending until the control channel recovers.
+
+## Evidence levels
+
+If inventory fails but the exact destination URL is already known, the app's `open_in_codex` browser entry can be used once to restore the sidebar association; `queued` is not proof that it opened. After the owning task is shown, retry inventory once. If inventory works but the automatic AX read in `cua.getTab` reaches the 30-second call limit, use the runtime's documented `agent.browsers.get(...).tabs.get(...)` and a separate DOM snapshot with a 45-second outer tool timeout. This read-only fallback succeeded in a recorded 33-second observation. It does not establish a universal timeout value or authorize repeating upload/send actions.
+
+Report only the highest state actually observed:
+
+1. `LOCAL_READY`: file exists locally.
+2. `ATTACHED`: exact filename is visible in the composer.
+3. `SENT`: the conversation shows the user's sent-message group with the attachment.
+4. `RECEIVED_READABLE`: GPT explicitly confirms the file can be read or demonstrates access to its contents.
+
+Never call a local package “sent”, and never infer delivery from a timeout-free API return alone. Browser DOM is primary evidence for visible upload/send state; thread-reading tools are useful secondary evidence but may lag and may omit attachment contents.
+
+If the webpage explicitly demonstrates access to the delivered contents and completes the requested acceptance, a lagging native history or a trailing generic generation error does not by itself invalidate that evidence. Record any remaining error separately and stop at the agreed acceptance condition; do not resend or regenerate an already established acceptance. An incomplete or contradictory reply still requires assessment.
+
+## Failure classification
+
+- Visible login page, expired-session banner, or permission prompt: authentication/session problem.
+- Exact ChatGPT conversation and composer visible, but CUA calls time out: control/telemetry instability.
+- Attachment remains in composer: upload completed but message not sent.
+- Sent message visible while GPT has no reply yet: delivery succeeded; review is pending.
+- Wrong or missing target tab: target-resolution problem, not login failure.
+
+## Continuous improvement
+
+For this user's maintained installation, future requested edits must also be synchronized to `https://github.com/Sunspark888/9.17-chatgpt-sidebar-handoff` after validation. The repository stores this skill at `chatgpt-sidebar-handoff/`; the local publishing checkout is `D:\codex\other\workflow优化\9.17-chatgpt-sidebar-handoff`. Check remote changes before committing, preserve unrelated work, and push only reviewed skill files and relevant documentation. Verify the remote commit; if synchronization fails, report the local change as unsynchronized. This is a maintenance step, not background monitoring, and does not authorize uploading private handoff payloads or credentials.
+
+When a real handoff exposes a failure mode not covered here, finish or safely stabilize the current delivery first, then improve this skill:
+
+1. Separate measured facts from inference and identify the failed layer: target resolution, authentication, control channel, page interaction, upload, send, or verification.
+2. Record the smallest evidence needed to reproduce the symptom and the recovery that actually worked. Never record credentials or private payload contents.
+3. Add a rule only when it is reusable and changes a future decision. Keep one-off incident detail in [references/incident-patterns.md](references/incident-patterns.md) instead of bloating this entrypoint.
+4. Preserve working rules and authorization boundaries. Do not turn a new incident into blanket permission, speculative hardening, or unrelated browser policy.
+5. After every update on this Windows host, run the bundled `skill-creator` validator with `python -X utf8 "C:\Users\HP\.codex\skills\.system\skill-creator\scripts\quick_validate.py" "C:\Users\HP\.codex\skills\chatgpt-sidebar-handoff"`; then check that referenced files exist and no template markers remain.
+
+Read [references/incident-patterns.md](references/incident-patterns.md) when diagnosing an unfamiliar or repeated failure, or before modifying this skill from a new incident.
+
+Keep credentials, cookies, tokens, passwords, and server secrets out of messages and packages. A skill never broadens the user's authorization for uploading or sending.

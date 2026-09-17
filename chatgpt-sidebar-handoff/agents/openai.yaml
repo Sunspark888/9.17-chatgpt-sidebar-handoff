@@ -1,0 +1,4 @@
+interface:
+  display_name: "ChatGPT 侧栏交接"
+  short_description: "稳定上传文件、发送消息并验证真实送达"
+  default_prompt: "连接指定的侧栏 ChatGPT 对话，完成文件或消息交接，并用可见证据确认实际送达。"
