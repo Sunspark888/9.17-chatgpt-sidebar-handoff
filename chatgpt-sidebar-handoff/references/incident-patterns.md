@@ -1,5 +1,14 @@
 # Incident Patterns
 
+## 2026-09-23 — Generated reply attachment visible, local download unverified
+
+- Stage: receive files from an existing ChatGPT reply, then return a prepared local ZIP to that same conversation.
+- Observed: the exact conversation and reply were readable. `read_thread` supplied reply text and user-uploaded attachment paths, but no local path for the assistant-generated review ZIP. The reply contained a prose download button and separate file cards with `下载文件` controls; the user identified the latter as the intended UI path. Browser control calls sometimes took 20–45 seconds or timed out. Clicking the prose button and a file-card download control did not produce the named file in the checked local download and temporary directories. A file preview was readable, which established content access but not file transfer.
+- Confirmed: the local handoff ZIP had already passed its own source and CRC checks. It was later attached to the exact target conversation, and the sent message group visibly contained both filename and handoff text. The recipient's explicit readable acknowledgement was still pending at the time of this record.
+- Unknown: whether the browser saved the generated files to an unobserved destination, blocked the downloads, or dropped the click internally. No account, permission, model-capability, or website cause was proven.
+- Recovery: inspect the file cards separately from prose links, preserve the distinction between preview and local file, and continue the independently authorized outbound handoff from `LOCAL_READY` through visible `SENT`.
+- Promoted rule: use the specific file card's download control and verify a real local file; do not stop an authorized handoff at local packaging or infer downloaded/sent status from a click or tool completion.
+
 ## 2026-09-12 — Scoped inventory and divergent same-conversation tabs
 
 - Source: completed handoff evidence reported by the main task; this maintenance pass did not retest the browser or send material.
