@@ -18,6 +18,8 @@ Before acting, fix four facts:
 
 If the user has already authorized delivery to this exact conversation, a locally finished package is only `LOCAL_READY`. Continue through attachment, send, and the required receipt check before treating the handoff as complete. A previous agent's failure to continue does not by itself show that the user's wording or the selected model was inadequate.
 
+Preserve the destination conversation's current model and reasoning setting during a pending handoff when the user says that setting is acceptable. Do not change it as an incidental performance adjustment, especially while a file is attached in the composer.
+
 For text-only coordination, prefer the thread messaging tool when it can reach the exact conversation. Use the in-app browser when files must be uploaded or visible page confirmation is required.
 
 The app's `send_message_to_thread` was verified with an existing `kind: chatgpt` conversation whose ID matched the website URL. This continues that conversation, rather than creating a Codex task. Verify the exact test/message and reply with `read_thread`; a successful tool return alone is not delivery evidence. Reads and already-open browser tabs may lag. Do not resend just because an early read is stale. The exposed message tool has no attachment parameter. Keep measured submission time, server reply time, and delayed observation time separate; message transport does not establish the model or reasoning mode used by the recipient.
