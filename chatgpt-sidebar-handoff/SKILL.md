@@ -7,6 +7,8 @@ description: Reliably hand messages or local files to a specified ChatGPT conver
 
 Use this skill for cross-conversation delivery through the Codex in-app browser. Treat browser-control errors, webpage state, and delivery state as three separate things.
 
+Keep this workflow on the in-app browser (`iab`) route. If global browser inventory fails, use the single browser-scoped inventory fallback below before classifying the browser as unavailable. Do not substitute a separate standalone Edge-profile binding or direct the user to Settings > Computer Use solely because `cua.getState()` failed: a host-level `browser_consent_required` from another browser-control route does not establish that the in-app browser is unavailable or that a visible permission prompt exists. Use the Edge extension route only when the user selected Edge or the task specifically requires that extension; honor any explicit consent barrier on that route.
+
 ## Delivery lock
 
 Before acting, fix four facts:
@@ -15,6 +17,13 @@ Before acting, fix four facts:
 - exact local file(s) and/or message to send;
 - acceptance evidence required: attached, sent, or explicitly readable by GPT;
 - stop condition.
+
+For a new long-running project Main or a replacement Main, also separate two scopes before sending:
+
+- **transfer scope**: which currently available, non-duplicate source materials must physically reach the destination;
+- **reading scope**: which layers the recipient should read now.
+
+Do not turn progressive reading into selective delivery. When the user or the controlling handoff plan requires a complete takeover, transfer every currently available unique source set, including conversation archives, execution-thread archives, attachments, current drafts, governing documents, and the navigation/decision layer. Split an oversized union archive into independently readable parts instead of silently sending only a smaller core package. State known missing or truncated items; do not call them recovered. A recipient's later statement that it can proceed with less does not retroactively narrow the user's explicit transfer scope.
 
 If the user has already authorized delivery to this exact conversation, a locally finished package is only `LOCAL_READY`. Continue through attachment, send, and the required receipt check before treating the handoff as complete. A previous agent's failure to continue does not by itself show that the user's wording or the selected model was inadequate.
 
@@ -47,6 +56,8 @@ After clicking, verify the file exists at an accessible local path and can be op
 4. Inspect fresh DOM and require the exact filename to appear in the composer before sending.
 5. Fill the accompanying message. For an attachment, prefer clicking the exact `发送提示词` button; Enter may leave the draft unsent while upload processing finishes.
 6. Inspect fresh DOM and require a sent-message group containing both the filename and message. If the task requires review, wait for GPT's explicit acknowledgement that the file is readable.
+
+For a complete takeover, verify receipt for the whole required source set, not merely the first core file. A compact guide should tell the recipient to read current state and decision rationale first, then open raw conversations and attachments only when the active task needs them. The guide reduces reading load; it is not a substitute for transferring the source material.
 
 Keep side-effecting operations serial: attach, verify, send, verify. Batch only independent read-only checks.
 

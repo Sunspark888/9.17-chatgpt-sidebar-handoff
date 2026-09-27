@@ -1,5 +1,14 @@
 # Incident Patterns
 
+## 2026-09-27 — Progressive reading mistaken for selective delivery
+
+- Stage: move a long-running research project from an older Main conversation to a new Main conversation.
+- Observed: a 63 MB core package and two current control files were delivered and explicitly readable, while the already prepared attachment bundles and full Work-conversation archive were not delivered to the new Main. The project had a three-layer reading plan, but the execution treated “read L1/L2 first and inspect L3 when needed” as permission to transfer only the core subset.
+- Confirmed: the full source set already existed as independently readable split archives. The user's established requirement was to transfer all currently available unique material once, while using the three layers only to control what the new Main reads by default.
+- Cause: transfer scope and reading scope were collapsed. A recipient acknowledgement that the core was sufficient was incorrectly allowed to override the user's original complete-transfer scope.
+- Recovery: send the remaining non-duplicate split archives and a short reading guide; verify the whole required set reaches `RECEIVED_READABLE`.
+- Promoted rule: for a complete project takeover, decide and verify source-set completeness separately from reading priority. Progressive disclosure changes the read order, not what is physically handed over.
+
 ## 2026-09-23 — Generated reply attachment visible, local download unverified
 
 - Stage: receive files from an existing ChatGPT reply, then return a prepared local ZIP to that same conversation.
@@ -9,6 +18,15 @@
 - Unknown: whether the browser saved the generated files to an unobserved destination, blocked the downloads, or dropped the click internally. No account, permission, model-capability, or website cause was proven.
 - Recovery: inspect the file cards separately from prose links, preserve the distinction between preview and local file, and continue the independently authorized outbound handoff from `LOCAL_READY` through visible `SENT`.
 - Promoted rule: use the specific file card's download control and verify a real local file; do not stop an authorized handoff at local packaging or infer downloaded/sent status from a click or tool completion.
+
+## 2026-09-23 — In-app browser inventory mistaken for standalone Edge consent
+
+- Stage: attach a locally prepared T01–T11 package to the existing Main8 conversation.
+- Observed: `cua.getState()` returned `nodeRepl.fetch request failed`. An unnecessary standalone Edge-profile bind then returned `browser_consent_required`, and the user was incorrectly directed to look for a Computer Use setting. A single `cua.listTabs({browser:'iab'})` call succeeded and listed the exact open Main8 tab. The `cua.getTab` accessibility/DOM attempt timed out; the documented `agent.browsers.get('iab').tabs.get(...)` path with a longer bounded call returned the exact URL, title, composer, and attachment state. The package filename appeared in the composer, and after send the exact sent-message group appeared while Main8 began generating.
+- Confirmed: the failure was route confusion plus an unneeded fallback, not evidence that the in-app browser needed Edge profile authorization. The upload and send reached visible `SENT` state. `RECEIVED_READABLE` remained pending while Main8 was generating.
+- Unknown: why `getState()` and the first tab-read route timed out; no root cause is assigned to the account, website, or network.
+- Recovery: after global inventory failure, use the already documented `iab`-scoped `listTabs` fallback; if CUA tab binding times out, use the documented browser/tab route with a separate bounded DOM read. Keep upload/send verification serial.
+- Promoted rule: for this skill, stay on the in-app browser route. Do not use a standalone Edge-profile consent failure to infer an in-app-browser permission issue or tell the user to search for a settings prompt. If an explicitly selected Edge-extension route requires consent, preserve that barrier.
 
 ## 2026-09-12 — Scoped inventory and divergent same-conversation tabs
 
