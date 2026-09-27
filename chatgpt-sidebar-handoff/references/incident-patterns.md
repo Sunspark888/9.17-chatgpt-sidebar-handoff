@@ -3,11 +3,11 @@
 ## 2026-09-27 — Progressive reading mistaken for selective delivery
 
 - Stage: move a long-running research project from an older Main conversation to a new Main conversation.
-- Observed: a 63 MB core package and two current control files were delivered and explicitly readable, while the already prepared attachment bundles and full Work-conversation archive were not delivered to the new Main. The project had a three-layer reading plan, but the execution treated “read L1/L2 first and inspect L3 when needed” as permission to transfer only the core subset.
-- Confirmed: the full source set already existed as independently readable split archives. The user's established requirement was to transfer all currently available unique material once, while using the three layers only to control what the new Main reads by default.
-- Cause: transfer scope and reading scope were collapsed. A recipient acknowledgement that the core was sufficient was incorrectly allowed to override the user's original complete-transfer scope.
-- Recovery: send the remaining non-duplicate split archives and a short reading guide; verify the whole required set reaches `RECEIVED_READABLE`.
-- Promoted rule: for a complete project takeover, decide and verify source-set completeness separately from reading priority. Progressive disclosure changes the read order, not what is physically handed over.
+- Observed: a 63 MB core package and two control files reached `RECEIVED_READABLE`. The remaining attachment partitions, the complete Work conversation archive, and the reading guide reached the composer/attachment state but were not sent and did not receive readability confirmation.
+- Confirmed: the full source set already existed as independently readable split archives. The user's established requirement was to transfer all currently available non-duplicate material in scope while using the reading guide only to control what the new Main reads first.
+- Cause: reading scope was incorrectly allowed to narrow transfer scope, and partial delivery was prematurely described as complete takeover.
+- Corrective rule: for a declared complete takeover, build a transfer manifest, deliver every available non-duplicate source set in scope, distinguish `ATTACHED` from `SENT` and `RECEIVED_READABLE`, and reconcile the manifest against recipient receipts before declaring takeover complete.
+- Outcome: this incident was not repaired in the affected thread; later remediation requires a new user-approved takeover attempt.
 
 ## 2026-09-27 — Unsent composer mistaken for a completed takeover
 
@@ -15,7 +15,7 @@
 - Observed: several later messages claimed the takeover view or current material was complete, while the large attachment set was only staged in the composer. Some files finished uploading, one Work archive failed once and was retried, but no sent-message group or recipient readability acknowledgement existed for that staged set.
 - Confirmed: the earlier core ZIP and two control files reached `RECEIVED_READABLE`; the later seven archive parts plus reading guide reached only `ATTACHED`. The project also opened the new conversation in Work mode instead of the user's required Chat mode and did not explicitly set the default model.
 - Cause: a compact-state takeover test was allowed to stand in for the user's full-transfer requirement, and the workflow reported preparation state as if it were delivery state.
-- Recovery: stop the current takeover attempt, preserve the evidence, have the workflow Main review the failure package, then rerun a clean two-round takeover only after user approval.
+- Recovery: stop the current takeover attempt, preserve the evidence, have the workflow Main review the failure package, then rerun a clean adaptive takeover only after user approval; do not impose a fixed round count.
 - Promoted rule: a new Main is not accepted until every required unique source set has a visible sent-message group and a file-by-file `RECEIVED_READABLE` reply. `ATTACHED` is never `SENT`; no prose such as “complete delivery” may outrun the evidence state.
 
 ## 2026-09-23 — Generated reply attachment visible, local download unverified
