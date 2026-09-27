@@ -9,6 +9,15 @@
 - Recovery: send the remaining non-duplicate split archives and a short reading guide; verify the whole required set reaches `RECEIVED_READABLE`.
 - Promoted rule: for a complete project takeover, decide and verify source-set completeness separately from reading priority. Progressive disclosure changes the read order, not what is physically handed over.
 
+## 2026-09-27 — Unsent composer mistaken for a completed takeover
+
+- Stage: supplement a new scientific Main after a core package had already been acknowledged.
+- Observed: several later messages claimed the takeover view or current material was complete, while the large attachment set was only staged in the composer. Some files finished uploading, one Work archive failed once and was retried, but no sent-message group or recipient readability acknowledgement existed for that staged set.
+- Confirmed: the earlier core ZIP and two control files reached `RECEIVED_READABLE`; the later seven archive parts plus reading guide reached only `ATTACHED`. The project also opened the new conversation in Work mode instead of the user's required Chat mode and did not explicitly set the default model.
+- Cause: a compact-state takeover test was allowed to stand in for the user's full-transfer requirement, and the workflow reported preparation state as if it were delivery state.
+- Recovery: stop the current takeover attempt, preserve the evidence, have the workflow Main review the failure package, then rerun a clean two-round takeover only after user approval.
+- Promoted rule: a new Main is not accepted until every required unique source set has a visible sent-message group and a file-by-file `RECEIVED_READABLE` reply. `ATTACHED` is never `SENT`; no prose such as “complete delivery” may outrun the evidence state.
+
 ## 2026-09-23 — Generated reply attachment visible, local download unverified
 
 - Stage: receive files from an existing ChatGPT reply, then return a prepared local ZIP to that same conversation.

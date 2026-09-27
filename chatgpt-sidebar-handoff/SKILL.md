@@ -25,6 +25,10 @@ For a new long-running project Main or a replacement Main, also separate two sco
 
 Do not turn progressive reading into selective delivery. When the user or the controlling handoff plan requires a complete takeover, transfer every currently available unique source set, including conversation archives, execution-thread archives, attachments, current drafts, governing documents, and the navigation/decision layer. Split an oversized union archive into independently readable parts instead of silently sending only a smaller core package. State known missing or truncated items; do not call them recovered. A recipient's later statement that it can proceed with less does not retroactively narrow the user's explicit transfer scope.
 
+When creating a new ChatGPT Main for this user's long-running projects, use **Chat mode**, not Work mode. The default model is **GPT-5.6 Sol with Extra High reasoning**. Do not leave the model unspecified. A Main may explicitly decide that one bounded review needs GPT-6 Pro; in that case switch only for that review and return to GPT-5.6 Sol Extra High afterward. Do not infer or simulate a model change from prompt text; verify the visible UI state.
+
+Do not impose a fixed number of startup rounds. The user's mention of a first or second round may be an example rather than a protocol. Adapt the exchange to file-size limits, upload reliability, and the recipient's exact missing-material requests. The startup is complete only when the full required non-duplicate source set is `RECEIVED_READABLE`, the recipient has a usable reading guide, and the collaboration loop has either produced the next bounded task or an explicit `WAIT`/`STOP`. A prose-only acknowledgement, a local package, or an attachment visible only in the composer is not completion.
+
 If the user has already authorized delivery to this exact conversation, a locally finished package is only `LOCAL_READY`. Continue through attachment, send, and the required receipt check before treating the handoff as complete. A previous agent's failure to continue does not by itself show that the user's wording or the selected model was inadequate.
 
 Preserve the destination conversation's current model and reasoning setting during a pending handoff when the user says that setting is acceptable. Do not change it as an incidental performance adjustment, especially while a file is attached in the composer.
@@ -57,7 +61,7 @@ After clicking, verify the file exists at an accessible local path and can be op
 5. Fill the accompanying message. For an attachment, prefer clicking the exact `发送提示词` button; Enter may leave the draft unsent while upload processing finishes.
 6. Inspect fresh DOM and require a sent-message group containing both the filename and message. If the task requires review, wait for GPT's explicit acknowledgement that the file is readable.
 
-For a complete takeover, verify receipt for the whole required source set, not merely the first core file. A compact guide should tell the recipient to read current state and decision rationale first, then open raw conversations and attachments only when the active task needs them. The guide reduces reading load; it is not a substitute for transferring the source material.
+For a complete takeover, verify receipt for the whole required source set, not merely the first core file. A compact guide should identify what each material contains and suggest an efficient reading priority. When the project already uses L1/L2/L3, those labels may mean current state, decision rationale, and raw sources; otherwise use plain descriptive headings instead of forcing the labels. The guide reduces reading load; it is not a substitute for transferring the source material.
 
 Keep side-effecting operations serial: attach, verify, send, verify. Batch only independent read-only checks.
 
