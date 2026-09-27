@@ -7,7 +7,7 @@
 - Confirmed: the full source set already existed as independently readable split archives. The user's established requirement was to transfer all currently available non-duplicate material in scope while using the reading guide only to control what the new Main reads first.
 - Cause: reading scope was incorrectly allowed to narrow transfer scope, and partial delivery was prematurely described as complete takeover.
 - Corrective rule: for a declared complete takeover, build a transfer manifest, deliver every available non-duplicate source set in scope, distinguish `ATTACHED` from `SENT` and `RECEIVED_READABLE`, and reconcile the manifest against recipient receipts before declaring takeover complete.
-- Outcome: this incident was not repaired in the affected thread; later remediation requires a new user-approved takeover attempt.
+- Outcome: this incident was not repaired in the affected thread; later remediation requires a new user-approved takeover attempt. A later clean takeover was completed separately on 2026-09-28 and is recorded in the Drive-sidecar incident below.
 
 ## 2026-09-27 — Unsent composer mistaken for a completed takeover
 
@@ -16,7 +16,15 @@
 - Confirmed: the earlier core ZIP and two control files reached `RECEIVED_READABLE`; the later seven archive parts plus reading guide reached only `ATTACHED`. The project also opened the new conversation in Work mode instead of the user's required Chat mode and did not explicitly set the default model.
 - Cause: a compact-state takeover test was allowed to stand in for the user's full-transfer requirement, and the workflow reported preparation state as if it were delivery state.
 - Recovery: stop the current takeover attempt, preserve the evidence, have the workflow Main review the failure package, then rerun a clean adaptive takeover only after user approval; do not impose a fixed round count.
-- Promoted rule: a new Main is not accepted until every required unique source set has a visible sent-message group and a file-by-file `RECEIVED_READABLE` reply. `ATTACHED` is never `SENT`; no prose such as “complete delivery” may outrun the evidence state.
+- Promoted rule: a new Main is not accepted until every required unique source set has route-appropriate delivery evidence and recipient-side `RECEIVED_READABLE` confirmation. For normal ChatGPT attachments, a visible sent-message group is required; for an authorized Drive sidecar, the manifest must contain the exact Drive locator/coverage and the recipient must actually fetch/open the material. Composer-only `ATTACHED` state is never delivery.
+
+## 2026-09-28 — Complete takeover recovered through a Drive sidecar
+
+- Stage: complete Web Main takeover after large direct attachment delivery became unreliable.
+- Observed: the remaining large archive partitions were placed in an authorized Drive location and mapped back to the original source sets.
+- Confirmed: the recipient Main actually fetched and unpacked the sidecar files; original partition coverage was 12/12 and 367/367, 25/25 nested ZIPs passed, and the final manifest reconciled with no missing/extra/duplicate members beyond already declared historical gaps. The Main then returned `TRANSFER_COMPLETE=YES`, `ARCHIVE_READABILITY=PASS`, and `TAKEOVER_COMPLETE=YES`.
+- Separate microtest: the same Drive file ID was updated from Version A to Version B, and Workflow Main directly reread the new Version B marker.
+- Reusable rule: Drive may serve as a takeover sidecar when explicitly authorized and actually readable by the recipient. A Drive upload or URL alone is never delivery; manifest reconciliation and recipient readback remain required. Same-file-ID updates are suitable for mutable maintained references after update visibility has been verified, not for rewriting immutable evidence history.
 
 ## 2026-09-23 — Generated reply attachment visible, local download unverified
 

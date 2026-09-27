@@ -63,6 +63,10 @@ After clicking, verify the file exists at an accessible local path and can be op
 
 For a complete takeover, verify receipt for the whole required source set, not merely the first core file. A compact guide should identify what each material contains and suggest an efficient reading priority. When the project already uses L1/L2/L3, those labels may mean current state, decision rationale, and raw sources; otherwise use plain descriptive headings instead of forcing the labels. The guide reduces reading load; it is not a substitute for transferring the source material.
 
+**Drive sidecar fallback.** If the normal ChatGPT attachment route repeatedly fails for an oversized or upload-unreliable source set, and the controlling user/project has already authorized a shared Drive location that the recipient can actually access, the handoff may use Drive as a sidecar instead of repeatedly staging the same files in the composer. Record the exact Drive file IDs/URLs and source-set coverage in the transfer manifest, send those locators to the recipient, and require the recipient to actually fetch/open the files and confirm readability and coverage. Uploading a file to Drive or obtaining a Drive URL alone is not delivery. The source set reaches `RECEIVED_READABLE` only after recipient readback. Using the sidecar does not narrow the declared transfer scope.
+
+For mutable maintained reference files, an already verified same-file-ID update route may be reused. Do not assume update visibility merely because the Drive update call succeeded; verify it once by reading the updated content from the recipient side. Do not overwrite immutable raw evidence or historical snapshots merely to keep one file ID.
+
 An item counts as delivered only after it has been `SENT` and the recipient has confirmed it is `RECEIVED_READABLE`. `ATTACHED` or visible in the composer is not delivery. Track reading depth separately from receipt and readability.
 
 Keep side-effecting operations serial: attach, verify, send, verify. Batch only independent read-only checks.
@@ -94,7 +98,7 @@ Report only the highest state actually observed:
 
 1. `LOCAL_READY`: file exists locally.
 2. `ATTACHED`: exact filename is visible in the composer.
-3. `SENT`: the conversation shows the user's sent-message group with the attachment.
+3. `SENT`: recipient-facing delivery instructions have actually been transmitted through the declared route. For the normal ChatGPT attachment route, require the sent-message group containing the attachment. For an authorized Drive sidecar, require the exact Drive locator and manifest coverage to have been sent to the recipient. `SENT` alone still does not establish content readability.
 4. `RECEIVED_READABLE`: GPT explicitly confirms the file can be read or demonstrates access to its contents.
 
 Never call a local package “sent”, and never infer delivery from a timeout-free API return alone. Browser DOM is primary evidence for visible upload/send state; thread-reading tools are useful secondary evidence but may lag and may omit attachment contents.
