@@ -107,6 +107,17 @@ Never call a local package “sent”, and never infer delivery from a timeout-f
 
 If the webpage explicitly demonstrates access to the delivered contents and completes the requested acceptance, a lagging native history or a trailing generic generation error does not by itself invalidate that evidence. Record any remaining error separately and stop at the agreed acceptance condition; do not resend or regenerate an already established acceptance. An incomplete or contradictory reply still requires assessment.
 
+## Recipient reply stalls and retries
+
+After roughly five minutes without a usable reply to a normal ChatGPT review message, recheck the **exact conversation's visible page state** before continuing to wait. Elapsed time, an `active`/`idle` thread flag, or a missing native-history reply is not proof that GPT is still generating or that it never answered. Check the current message, composer, generation/stop control, and any red error/retry control. Do not refresh or send while generation is genuinely continuing.
+
+- If a complete answer is visible, use it even when `read_thread` lags or omits it; record the mismatch once.
+- If a red `重试` button belongs to the failed response, the page is idle, and no completed answer exists, click it **once**, then read back the result. If it fails again, report the concrete failure instead of looping.
+- If the page is idle with a partial answer and no retry button, send one short continuation request from the last visible point after the normal exact-target and reasoning-setting checks. Do not re-upload or repeat the full handoff.
+- If the page is idle with no answer or clear error, perform one bounded UI/history cross-check. Retry or continue once only when the original response state is known; never duplicate a delivered message just because one interface is stale.
+
+See [references/incident-patterns.md](references/incident-patterns.md) for the observed partial-reply case. Review completion still requires the promised file-read evidence or explicit final decision, not merely a statement of intent to review.
+
 ## Failure classification
 
 - Visible login page, expired-session banner, or permission prompt: authentication/session problem.

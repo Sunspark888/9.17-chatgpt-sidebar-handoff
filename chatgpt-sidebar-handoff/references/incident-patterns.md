@@ -80,6 +80,15 @@
 
 Use this file for evidence-backed failure patterns that are too detailed for `SKILL.md`. Promote only the reusable decision rule to the entrypoint.
 
+## 2026-09-28 — Idle page had a partial reply absent from native history
+
+- Stage: wait for a ChatGPT review of an already sent Drive package.
+- Observed: the native thread reader returned the delivered user turn but no assistant item; its thread status changed from active to idle. Repeated five-minute checks had treated the absent item as continued waiting. The user screenshot and a fresh in-app page snapshot showed an assistant paragraph promising to review the package, followed by an idle composer. There was no red retry button and no final review decision.
+- Confirmed: the sent handoff was visible; a partial reply existed in the page; native history omitted it. The visible paragraph did not prove that the package had been opened or reviewed.
+- Unknown: why the native reader omitted the reply or why generation ended before the promised review. The absence of a red button did not prove normal completion.
+- Recovery: after checking the exact target, idle page and visible Extra High reasoning, send one concise continuation from the last visible point. Do not resend the package. Record the resulting response separately when it arrives.
+- Reusable rule: after about five minutes of apparent generation, inspect the page, history and controls together. A red retry button warrants one retry of the failed response; an idle partial answer without one warrants one continuation. Do not equate a stale native read with thinking.
+
 For each new incident, record:
 
 - date and operation stage;
