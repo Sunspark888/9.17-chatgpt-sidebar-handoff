@@ -37,6 +37,8 @@ Preserve the destination conversation's current model and reasoning setting duri
 
 ## Native text delivery comes first
 
+Before the first native send to a target, verify its visible reasoning setting is **Extra High / 极高**. Native transport does not bypass this prerequisite. Reuse that verification on the same unchanged page; if the target or setting is uncertain, check the page before sending. Adjust only while idle, and never infer the setting from message-tool parameters.
+
 When the user has authorized messaging a known destination, discover and use the app's `send_message_to_thread` tool (currently `mcp__codex_app__send_message_to_thread`). Supply the exact existing conversation ID as `threadId` and the text as `prompt`; omit model/thinking overrides unless the user requested a change. Verify the destination ID against the conversation URL or trusted app listing. This route has been verified with `kind: chatgpt`: it continues that ChatGPT conversation, without creating a new Codex task or sending a Google Drive document as a chat message. Do not access hidden website APIs, credentials or cookies to reproduce it.
 
 - **Text:** use the native message tool first. A successful return means the call was accepted; verify the exact user message and required recipient response with `read_thread` or the visible page. If a recipient response is required, wait for that response before claiming the handoff is complete.
