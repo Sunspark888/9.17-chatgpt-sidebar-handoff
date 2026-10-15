@@ -126,3 +126,10 @@ Do not include credentials, cookies, tokens, private prompt contents, or unrelat
 - Unknown: whether a future validator version will set UTF-8 internally or add a help interface.
 - Recovery: use the fixed UTF-8 command recorded in `SKILL.md`; do not copy or reimplement the validator inside this skill.
 - Promoted rule: validation instructions must name the bundled validator and enable UTF-8 explicitly on this host.
+
+## 2026-10-15 — Native text coordination, separate from Drive state
+
+- Observed: native `send_message_to_thread` accepted a text update to an existing `kind: chatgpt` ID. The exact text and the recipient's completed acknowledgement were visible in that same conversation. The concurrent Drive Current/Handoff updates were separate operations.
+- Limitation: an immediate `read_thread` still showed an older completed turn and an assistant reference placeholder. Reading the existing in-app page established delivery; no repeated send or upload was needed.
+- Promoted rule: choose native transport first for authorized text, normal browser attachment or an authorized Drive sidecar for files, and verify the required receipt level. The tool schema has no attachment parameter; a Drive document update alone does not deliver a chat message.
+- User clarification: retain the previously verified model/reasoning setting on an unchanged page rather than checking the menu before every send. No fixed latency or hidden-API capability is claimed.

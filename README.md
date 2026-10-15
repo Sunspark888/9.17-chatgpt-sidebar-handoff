@@ -5,7 +5,8 @@
 ## 内容
 
 - [Skill 入口](chatgpt-sidebar-handoff/SKILL.md)：目标定位、文字直发、附件上传、超时恢复、送达验收。
-- 对本用户的大多数GPT对话，每次发送前都在可见界面核对思考强度为“极高”；消息接口参数不能替代该核对。
+- 文字优先调用已验证的原生 `send_message_to_thread`；附件走正常网页或已授权 Drive 文件链接。Drive 文档更新不等于发送聊天消息。
+- 首次接管页面时确认模型和“极高”，配置未变时沿用；实际改变或出现矛盾证据后才复查。消息接口参数不能证明网页档位。
 - [事故与恢复记录](chatgpt-sidebar-handoff/references/incident-patterns.md)：经过实际交接观察或主任务报告的证据，保留未知原因。
 - [界面元数据](chatgpt-sidebar-handoff/agents/openai.yaml)。
 
